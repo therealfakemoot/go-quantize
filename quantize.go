@@ -46,10 +46,11 @@ func (d Domain) Quantize(fs []float64) []int {
 	return ret
 }
 
-func genFloats(x, y float64) []float64 {
+// GenFloats will provide an x*y long array of floats, seeded with the given seed.
+func GenFloats(x, y float64, seed int64) []float64 {
 	var fs []float64
 
-	n := noise.NewWithSeed(8675309)
+	n := noise.NewWithSeed(seed)
 
 	for x := 0.0; x < 5.0; x++ {
 		for y := 0.0; y < 5.0; y++ {
@@ -67,7 +68,7 @@ func main() {
 		Step: 1.0,
 	}
 
-	fs := genFloats(5, 5)
+	fs := GenFloats(5, 5, 8675309)
 
 	v := d.Quantize(fs)
 
