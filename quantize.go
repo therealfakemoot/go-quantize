@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	noise "github.com/therealfakemoot/genesis/noise"
-	// "math"
-	// "math/rand"
 )
 
 // Domain describes the integer space to which float values must be mapped.
@@ -14,37 +12,52 @@ type Domain struct {
 	Step float64
 }
 
-// func quantize(delta float64, i float64) float64 {
-// return delta * math.Floor((i/delta)+.5)
-// }
-
-// Quantize normalizes a given set of arbitrary inputs into the provided output Domain.
-func Quantize(d Domain, fs []float64) []int {
-	var ret []int
+// Steps builds an array containing all steps in the desired output domain.
+func (d Domain) Steps() []float64 {
 	var steps []float64
-
-	quantize := func(steps float64, x float64) int {
-		if x >= 0.5 {
-			return int(x*steps + 0)
-		}
-		return int(x*(steps-1) - 1)
-	}
 
 	for i := d.Min; i <= d.Max; i += d.Step {
 		steps = append(steps, i)
 	}
 
-	stepFloat := float64(len(steps))
+	return steps
+}
+
+// Quantize normalizes a given set of arbitrary inputs into the provided output Domain.
+func (d Domain) Quantize(fs []float64) []int {
+	var ret []int
+
+	steps := d.Steps()
+	numSteps := float64(len(steps))
+
+	quantize := func(x float64) int {
+		if x >= 0.5 {
+			return int(x*numSteps + 0)
+		}
+		return int(x*(numSteps-1) - 1)
+	}
+
 	// quantaSize := (d.Max - d.Min) / (math.Pow(2.0, stepFloat) - 1.0)
 
 	for _, f := range fs {
-		ret = append(ret, quantize(stepFloat, f))
+		ret = append(ret, quantize(f))
 	}
 
-	// fmt.Printf("Steps: %v\n", steps)
-	// fmt.Printf("Quanta size: %f\n", quantaSize)
-
 	return ret
+}
+
+func genFloats(x, y float64) []float64 {
+	var fs []float64
+
+	n := noise.NewWithSeed(8675309)
+
+	for x := 0.0; x < 5.0; x++ {
+		for y := 0.0; y < 5.0; y++ {
+			fs = append(fs, n.Eval3(x, y, 0))
+		}
+	}
+
+	return fs
 }
 
 func main() {
@@ -54,22 +67,11 @@ func main() {
 		Step: 1.0,
 	}
 
-	n := noise.NewWithSeed(8675309)
+	fs := genFloats(5, 5)
 
-	var fs []float64
-	for x := 0.0; x < 5.0; x++ {
-		for y := 0.0; y < 5.0; y++ {
-			fs = append(fs, n.Eval3(x, y, 0))
-		}
-	}
-
-	// for i := 0; i < 20; i++ {
-	// fs = append(fs, rand.Float64())
-	// }
-
-	v := Quantize(d, fs)
+	v := d.Quantize(fs)
 
 	fmt.Printf("Output Domain: %+v\n", d)
-	fmt.Printf("%v\n", fs)
-	fmt.Printf("%v\n", v)
+	fmt.Printf("Input: %v\n", fs)
+	fmt.Printf("Output: %v\n", v)
 }
