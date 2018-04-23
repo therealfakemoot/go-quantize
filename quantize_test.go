@@ -28,22 +28,35 @@ func MaxInt(ints []int) int {
 	return max
 }
 
-func TestQuantizeMin(t *testing.T) {
-	d := Domain{
-		Min:  -5,
-		Max:  5,
-		Step: 1,
+func prepTests() []Domain {
+	var ret []Domain
+
+	for x := -2000.0; x < 0.0; x++ {
+		ret = append(ret, Domain{Min: x, Max: -x, Step: 1})
 	}
+	return ret
+}
 
-	fs := GenFloats(20, 20, 8675309)
+func TestQuantizeMin(t *testing.T) {
+	domains := prepTests()
 
-	quantized := d.Quantize(fs)
+	for _, d := range domains {
 
-	t.Logf("Quantized Values: %v", quantized)
-	min := MinInt(quantized)
+		for i := 5.0; i <= 200.0; i += 5 {
+			fs := GenFloats(i, i, 8675309)
 
-	if min < int(d.Min) {
-		t.Errorf("Domain Minimum (%d) exceeded: %d", int(d.Min), min)
+			quantized := d.Quantize(fs)
+
+			t.Logf("Domain: %+v", d)
+			t.Logf("GenFloats(%f, %f)", i, i)
+			t.Logf("Quantized Values: %v", quantized)
+
+			min := MinInt(quantized)
+
+			if min < int(d.Min) {
+				t.Errorf("Domain Minimum (%d) exceeded: %d\n", int(d.Min), min)
+			}
+		}
 	}
 
 }
@@ -75,8 +88,8 @@ func TestDomainSteps(t *testing.T) {
 	}
 
 	steps := d.Steps()
+
 	if len(steps) != 11 {
 		t.Errorf("Expected 11 steps, got: %d", len(steps))
 	}
-
 }
