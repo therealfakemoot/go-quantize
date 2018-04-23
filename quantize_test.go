@@ -28,17 +28,17 @@ func MaxInt(ints []int) int {
 	return max
 }
 
-func prepTests() []Domain {
+func prepTests(edge float64) []Domain {
 	var ret []Domain
 
-	for x := -2000.0; x < 0.0; x++ {
+	for x := edge; x < 0.0; x++ {
 		ret = append(ret, Domain{Min: x, Max: -x, Step: 1})
 	}
 	return ret
 }
 
 func TestQuantizeMin(t *testing.T) {
-	domains := prepTests()
+	domains := prepTests(-200)
 
 	for _, d := range domains {
 
@@ -62,21 +62,24 @@ func TestQuantizeMin(t *testing.T) {
 }
 
 func TestQuantizeMax(t *testing.T) {
-	d := Domain{
-		Min:  -5,
-		Max:  5,
-		Step: 1,
-	}
+	domains := prepTests(-200)
 
-	fs := GenFloats(20, 20, 8675309)
+	for _, d := range domains {
 
-	quantized := d.Quantize(fs)
+		for i := 5.0; i <= 200.0; i += 5 {
+			fs := GenFloats(i, i, 8675309)
 
-	t.Logf("%v", quantized)
-	max := MinInt(quantized)
+			quantized := d.Quantize(fs)
 
-	if max > int(d.Max) {
-		t.Errorf("Domain Maximum (%d) exceeded: %d", int(d.Max), max)
+			t.Logf("Domain: %+v", d)
+			t.Logf("GenFloats(%f, %f)", i, i)
+			t.Logf("Quantized Values: %v", quantized)
+			max := MinInt(quantized)
+
+			if max > int(d.Max) {
+				t.Errorf("Domain Maximum (%d) exceeded: %d", int(d.Max), max)
+			}
+		}
 	}
 }
 
