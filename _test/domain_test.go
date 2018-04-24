@@ -5,30 +5,6 @@ import (
 	"testing"
 )
 
-func MinFloat(ints []float64) float64 {
-	var min float64
-
-	for _, v := range ints {
-		if v < min {
-			min = v
-		}
-	}
-
-	return min
-}
-
-func MaxFloat(ints []float64) float64 {
-	var max float64
-
-	for _, v := range ints {
-		if v > max {
-			max = v
-		}
-	}
-
-	return max
-}
-
 func prepTests(edge float64) []Q.Domain {
 	var ret []Q.Domain
 
@@ -52,7 +28,7 @@ func TestDomainMin(t *testing.T) {
 			t.Logf("GenFloats(%f, %f)", i, i)
 			t.Logf("Quantized Values: %v", quantized)
 
-			min := MinFloat(quantized)
+			min := Q.Min(quantized)
 
 			if min < d.Min {
 				t.Errorf("Domain Minimum (%f) exceeded: %f\n", d.Min, min)
@@ -75,7 +51,7 @@ func TestDomainMax(t *testing.T) {
 			t.Logf("Domain: %+v", d)
 			t.Logf("GenFloats(%f, %f)", i, i)
 			t.Logf("Quantized Values: %v", quantized)
-			max := MaxFloat(quantized)
+			max := Q.Max(quantized)
 
 			if max > d.Max {
 				t.Errorf("Domain Maximum (%f) exceeded: %f", d.Max, max)
