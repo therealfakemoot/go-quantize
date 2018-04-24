@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 
-func MinInt(ints []int) int {
-	var min int
+func MinFloat(ints []float64) float64 {
+	var min float64
 
 	for _, v := range ints {
 		if v < min {
@@ -16,8 +16,8 @@ func MinInt(ints []int) int {
 	return min
 }
 
-func MaxInt(ints []int) int {
-	var max int
+func MaxFloat(ints []float64) float64 {
+	var max float64
 
 	for _, v := range ints {
 		if v > max {
@@ -38,11 +38,11 @@ func prepTests(edge float64) []Domain {
 }
 
 func TestQuantizeMin(t *testing.T) {
-	domains := prepTests(-200)
+	domains := prepTests(-20)
 
 	for _, d := range domains {
 
-		for i := 5.0; i <= 200.0; i += 5 {
+		for i := 5.0; i <= 20.0; i += 5 {
 			fs := GenFloats(i, i, 8675309)
 
 			quantized := d.Quantize(fs)
@@ -51,10 +51,10 @@ func TestQuantizeMin(t *testing.T) {
 			t.Logf("GenFloats(%f, %f)", i, i)
 			t.Logf("Quantized Values: %v", quantized)
 
-			min := MinInt(quantized)
+			min := MinFloat(quantized)
 
-			if min < int(d.Min) {
-				t.Errorf("Domain Minimum (%d) exceeded: %d\n", int(d.Min), min)
+			if min < d.Min {
+				t.Errorf("Domain Minimum (%f) exceeded: %f\n", d.Min, min)
 			}
 		}
 	}
@@ -62,11 +62,11 @@ func TestQuantizeMin(t *testing.T) {
 }
 
 func TestQuantizeMax(t *testing.T) {
-	domains := prepTests(-200)
+	domains := prepTests(-20)
 
 	for _, d := range domains {
 
-		for i := 5.0; i <= 200.0; i += 5 {
+		for i := 5.0; i <= 20.0; i += 5 {
 			fs := GenFloats(i, i, 8675309)
 
 			quantized := d.Quantize(fs)
@@ -74,10 +74,10 @@ func TestQuantizeMax(t *testing.T) {
 			t.Logf("Domain: %+v", d)
 			t.Logf("GenFloats(%f, %f)", i, i)
 			t.Logf("Quantized Values: %v", quantized)
-			max := MinInt(quantized)
+			max := MaxFloat(quantized)
 
-			if max > int(d.Max) {
-				t.Errorf("Domain Maximum (%d) exceeded: %d", int(d.Max), max)
+			if max > d.Max {
+				t.Errorf("Domain Maximum (%f) exceeded: %f", d.Max, max)
 			}
 		}
 	}
