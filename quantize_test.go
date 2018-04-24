@@ -37,7 +37,7 @@ func prepTests(edge float64) []Domain {
 	return ret
 }
 
-func TestQuantizeMin(t *testing.T) {
+func TestDomainMin(t *testing.T) {
 	domains := prepTests(-20)
 
 	for _, d := range domains {
@@ -61,7 +61,7 @@ func TestQuantizeMin(t *testing.T) {
 
 }
 
-func TestQuantizeMax(t *testing.T) {
+func TestDomainMax(t *testing.T) {
 	domains := prepTests(-20)
 
 	for _, d := range domains {
