@@ -1,6 +1,7 @@
-package main
+package quantize_test
 
 import (
+	Q "github.com/therealfakemoot/go-quantize"
 	"testing"
 )
 
@@ -28,11 +29,11 @@ func MaxFloat(ints []float64) float64 {
 	return max
 }
 
-func prepTests(edge float64) []Domain {
-	var ret []Domain
+func prepTests(edge float64) []Q.Domain {
+	var ret []Q.Domain
 
 	for x := edge; x < 0.0; x++ {
-		ret = append(ret, Domain{Min: x, Max: -x, Step: 1})
+		ret = append(ret, Q.Domain{Min: x, Max: -x, Step: 1})
 	}
 	return ret
 }
@@ -43,7 +44,7 @@ func TestDomainMin(t *testing.T) {
 	for _, d := range domains {
 
 		for i := 5.0; i <= 20.0; i += 5 {
-			fs := GenFloats(i, i, 8675309)
+			fs := Q.GenFloats(i, i, 8675309)
 
 			quantized := d.Quantize(fs)
 
@@ -67,7 +68,7 @@ func TestDomainMax(t *testing.T) {
 	for _, d := range domains {
 
 		for i := 5.0; i <= 20.0; i += 5 {
-			fs := GenFloats(i, i, 8675309)
+			fs := Q.GenFloats(i, i, 8675309)
 
 			quantized := d.Quantize(fs)
 
@@ -84,7 +85,7 @@ func TestDomainMax(t *testing.T) {
 }
 
 func TestDomainSteps(t *testing.T) {
-	d := Domain{
+	d := Q.Domain{
 		Min:  -5,
 		Max:  5,
 		Step: 1,
