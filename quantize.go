@@ -24,17 +24,17 @@ func (d Domain) Steps() []float64 {
 }
 
 // Quantize normalizes a given set of arbitrary inputs into the provided output Domain.
-func (d Domain) Quantize(fs []float64) []int {
-	var ret []int
+func (d Domain) Quantize(fs []float64) []float64 {
+	var ret []float64
 
 	steps := d.Steps()
 	numSteps := float64(len(steps))
 
-	quantize := func(x float64) int {
+	quantize := func(x float64) float64 {
 		if x >= 0.5 {
-			return int(x*numSteps + 0)
+			return x*numSteps + 0
 		}
-		return int(x*(numSteps-1) - 1)
+		return x*(numSteps-1) - 1
 	}
 
 	// quantaSize := (d.Max - d.Min) / (math.Pow(2.0, stepFloat) - 1.0)
