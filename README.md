@@ -29,3 +29,5 @@ fmt.Printf("Output Domain: %+v\n", d)
 fmt.Printf("Input: %v\n", fs)
 fmt.Printf("Output: %v\n", v)
 ```
+
+The return value of `Quantize()` is an array of float64 values, normalized to the given Domain: in the case of the example, there will be no values smaller than -5, no values greater than 5.0, and all values will be integer increments between the two end points: -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, and 5.
