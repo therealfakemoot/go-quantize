@@ -30,8 +30,8 @@ func Max(fs []float64) float64 {
 	return max
 }
 
-// GenFloats will provide an x*y long array of floats, seeded with the given seed.
-func GenFloats(x, y float64, seed int64) []float64 {
+// Noise will provide an x*y long array of floats, seeded with the given seed.
+func Noise(x, y float64, seed int64) []float64 {
 	var fs []float64
 
 	n := noise.NewWithSeed(seed)

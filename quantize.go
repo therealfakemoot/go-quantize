@@ -11,7 +11,7 @@ func main() {
 		Step: 1.0,
 	}
 
-	fs := GenFloats(5, 5, 8675309)
+	fs := Noise(5, 5, 8675309)
 
 	v := d.Quantize(fs)
 
