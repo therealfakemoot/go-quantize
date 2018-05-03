@@ -1,11 +1,20 @@
 package quantize_test
 
 import (
+	"fmt"
 	Q "github.com/therealfakemoot/go-quantize"
 	"testing"
 )
 
-func prepTests(edge float64) []Q.Domain {
+var (
+	seed    int64 = 8675309
+	edge          = -20.0
+	mapMin        = 5.0
+	mapMax        = 20.0
+	mapStep       = 5.0
+)
+
+func buildTestDomains(edge float64) []Q.Domain {
 	var ret []Q.Domain
 
 	for x := edge; x < 0.0; x++ {
@@ -14,50 +23,50 @@ func prepTests(edge float64) []Q.Domain {
 	return ret
 }
 
-func TestDomainMin(t *testing.T) {
-	domains := prepTests(-20)
+func assertDomainMin(d Q.Domain, fs []float64) bool {
 
-	for _, d := range domains {
-
-		for i := 5.0; i <= 20.0; i += 5 {
-			fs := Q.GenFloats(i, i, 8675309)
-
-			quantized := d.Quantize(fs)
-
-			t.Logf("Domain: %+v", d)
-			t.Logf("GenFloats(%f, %f)", i, i)
-			t.Logf("Quantized Values: %v", quantized)
-
-			min := Q.Min(quantized)
-
-			if min < d.Min {
-				t.Errorf("Domain Minimum (%f) exceeded: %f\n", d.Min, min)
-			}
-		}
+	min := Q.Min(fs)
+	if min < d.Min {
+		return false
 	}
-
+	return true
 }
 
-func TestDomainMax(t *testing.T) {
-	domains := prepTests(-20)
+func assertDomainMax(d Q.Domain, fs []float64) bool {
+
+	max := Q.Min(fs)
+	if max > d.Max {
+		return false
+	}
+	return true
+}
+
+func TestDomainBounds(t *testing.T) {
+	domains := buildTestDomains(edge)
 
 	for _, d := range domains {
+		t.Run(fmt.Sprintf("Domain:[%0.f,%0.f]", d.Min, d.Max), func(t *testing.T) {
+			for i := mapMin; i <= mapMax; i += mapStep {
+				fs := Q.Noise(i, i, seed)
+				quantized := d.Quantize(fs)
+				t.Run(fmt.Sprintf("Map(%0.f,%0.f:%d)", i, i, seed), func(t *testing.T) {
+					t.Run("Min", func(t *testing.T) {
+						if !assertDomainMin(d, quantized) {
+							t.Fail()
+						}
+					})
 
-		for i := 5.0; i <= 20.0; i += 5 {
-			fs := Q.GenFloats(i, i, 8675309)
+					t.Run("Max", func(t *testing.T) {
+						if !assertDomainMax(d, quantized) {
+							t.Fail()
+						}
+					})
 
-			quantized := d.Quantize(fs)
-
-			t.Logf("Domain: %+v", d)
-			t.Logf("GenFloats(%f, %f)", i, i)
-			t.Logf("Quantized Values: %v", quantized)
-			max := Q.Max(quantized)
-
-			if max > d.Max {
-				t.Errorf("Domain Maximum (%f) exceeded: %f", d.Max, max)
+				})
 			}
-		}
+		})
 	}
+
 }
 
 func TestDomainSteps(t *testing.T) {
