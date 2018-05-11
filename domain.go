@@ -1,5 +1,7 @@
 package quantize
 
+import "math"
+
 // Domain describes the integer space to which float values must be mapped.
 type Domain struct {
 	Min  float64
@@ -23,13 +25,22 @@ func (d Domain) Quantize(fs []float64) []float64 {
 	var ret []float64
 
 	steps := d.Steps()
-	numSteps := float64(len(steps))
 
 	quantize := func(x float64) float64 {
-		if x >= 0.5 {
-			return x*numSteps + 0
+		var distances []float64
+		var stepIndex int
+		for _, step := range steps {
+			distances = append(distances, math.Abs(x)-math.Abs(step))
 		}
-		return x*(numSteps-1) - 1
+		minDistance := Min(distances)
+
+		for i, d := range distances {
+			if d == minDistance {
+				stepIndex = i
+				break
+			}
+		}
+		return steps[stepIndex]
 	}
 
 	// quantaSize := (d.Max - d.Min) / (math.Pow(2.0, stepFloat) - 1.0)
