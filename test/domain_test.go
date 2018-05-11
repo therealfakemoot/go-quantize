@@ -3,6 +3,7 @@ package quantize_test
 import (
 	"fmt"
 	Q "github.com/therealfakemoot/go-quantize"
+	"reflect"
 	"testing"
 )
 
@@ -67,6 +68,19 @@ func TestDomainBounds(t *testing.T) {
 		})
 	}
 
+}
+
+func TestKnownValues(t *testing.T) {
+	d := Q.Domain{Min: -5, Max: 5, Step: 1}
+	fs := []float64{-1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1}
+	quantized := d.Quantize(fs)
+	var expected []float64
+	expected = make([]float64, 11)
+	expected = []float64{-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5}
+
+	if !reflect.DeepEqual(quantized, expected) {
+		t.Errorf("Expected: %v, got %v", expected, quantized)
+	}
 }
 
 func TestDomainSteps(t *testing.T) {
