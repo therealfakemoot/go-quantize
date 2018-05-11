@@ -30,7 +30,7 @@ func (d Domain) Quantize(fs []float64) []float64 {
 		var distances []float64
 		var stepIndex int
 		for _, step := range steps {
-			distances = append(distances, math.Abs(x)-math.Abs(step))
+			distances = append(distances, math.Abs(math.Abs(x)-math.Abs(step)))
 		}
 		minDistance := Min(distances)
 
