@@ -1,2 +1,3 @@
 tags
 *.test
+__pycache__/
