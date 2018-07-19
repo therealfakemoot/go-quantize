@@ -6,9 +6,11 @@ def abs_diff(x, y):
 def scaleSteps(steps):
     raise NotImplementedError
 
-def quantize(steps, x):
-    stepIndex = None
+def Q(steps, fs):
+    for f in fs:
+        yield(quantize(steps, f))
 
+def quantize(steps, x):
     if abs(min(steps)) == abs(max(steps)):
         scale = max(steps)
     else:
@@ -19,9 +21,6 @@ def quantize(steps, x):
     distances = [abs_diff(scaled, step) for step in steps]
 
     return steps[distances.index(min(distances))]
-
-def Q(steps, fs, func=quantize):
-    return [func(steps, f) for f in fs]
 
 # The output domain is the set of possible values that inputs can be mapped to.
 output_domain = list(range(-5, 6, 1))
