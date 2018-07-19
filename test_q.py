@@ -2,7 +2,7 @@ import unittest
 
 from q import Q, quantize
 
-class TestQuantize(unittest.TestCase):
+class TestBalancedDomain(unittest.TestCase):
     def testFullRange(self):
         steps = range(-5, 6, 1)
         steps = list(steps)
@@ -21,6 +21,27 @@ class TestQuantize(unittest.TestCase):
         expected = -5
         actual = quantize(steps, -1)
         self.assertEqual(expected, actual)
+
+class TestUnbalancedDomain(unittest.TestCase):
+    def testFullRange(self):
+        steps = range(-10, 21, 3)
+        steps = list(steps)
+
+        fs = [-1, -.8, -.6, -.4, -.2, 0, .2, .4, .6, .8, 1]
+
+        expected = [-10, -7, -4, -1, 2, 5, 8, 11, 14, 17, 20]
+        actual = Q(steps, fs)
+        self.assertEqual(expected, actual)
+
+    def testSingleValue(self):
+        steps = range(-10, 21, 3)
+        steps = list(steps)
+
+
+        expected = -10
+        actual = quantize(steps, -1)
+        self.assertEqual(expected, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
