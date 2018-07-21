@@ -2,33 +2,6 @@ package quantize
 
 import "math"
 
-func absDiff(x, y float64) float64 {
-	return math.Abs(math.Min(x, y) - math.Max(x, y))
-}
-
-func midpoint(steps []float64) float64 {
-	return (steps[0] + steps[len(steps)-1]) / 2
-}
-
-func balanceSteps(steps []float64) []float64 {
-	var shifted []float64
-	var shifter func(float64, float64) float64
-	m := midpoint(steps)
-	shift := absDiff(m, 0)
-
-	if math.Abs(Min(steps)) < math.Abs(Max(steps)) {
-		shifter = func(s, x float64) float64 { return x - s }
-	} else {
-		shifter = func(s, x float64) float64 { return x + s }
-	}
-
-	for _, s := range steps {
-		shifted = append(shifted, shifter(s, shift))
-	}
-
-	return shifted
-}
-
 // Domain describes the integer space to which float values must be mapped.
 type Domain struct {
 	Min  float64
@@ -79,4 +52,31 @@ func (d Domain) Quantize(fs []float64) []float64 {
 	}
 
 	return ret
+}
+
+func absDiff(x, y float64) float64 {
+	return math.Abs(math.Min(x, y) - math.Max(x, y))
+}
+
+func midpoint(steps []float64) float64 {
+	return (steps[0] + steps[len(steps)-1]) / 2
+}
+
+func balanceSteps(steps []float64) []float64 {
+	var shifted []float64
+	var shifter func(float64, float64) float64
+	m := midpoint(steps)
+	shift := absDiff(m, 0)
+
+	if math.Abs(Min(steps)) < math.Abs(Max(steps)) {
+		shifter = func(s, x float64) float64 { return x - s }
+	} else {
+		shifter = func(s, x float64) float64 { return x + s }
+	}
+
+	for _, s := range steps {
+		shifted = append(shifted, shifter(s, shift))
+	}
+
+	return shifted
 }
