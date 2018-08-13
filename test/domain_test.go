@@ -27,19 +27,13 @@ func buildTestDomains(edge float64) []Q.Domain {
 func assertDomainMin(d Q.Domain, fs []float64) bool {
 
 	min := Q.Min(fs)
-	if min < d.Min {
-		return false
-	}
-	return true
+	return !(min < d.Min)
 }
 
 func assertDomainMax(d Q.Domain, fs []float64) bool {
 
-	max := Q.Min(fs)
-	if max > d.Max {
-		return false
-	}
-	return true
+	max := Q.Max(fs)
+	return !(max > d.Max)
 }
 
 func TestDomainBounds(t *testing.T) {
@@ -74,9 +68,7 @@ func TestKnownValues(t *testing.T) {
 	d := Q.Domain{Min: -5, Max: 5, Step: 1}
 	fs := []float64{-1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1}
 	quantized := d.Quantize(fs)
-	var expected []float64
-	expected = make([]float64, 11)
-	expected = []float64{-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5}
+	expected := []float64{-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5}
 
 	if !reflect.DeepEqual(quantized, expected) {
 		t.Errorf("Expected: %v, got %v", expected, quantized)
