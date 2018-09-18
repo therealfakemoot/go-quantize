@@ -65,6 +65,18 @@ func TestDomainBounds(t *testing.T) {
 }
 
 func TestKnownValues(t *testing.T) {
+	t.Run("Balanced Domains", func(t *testing.T) {
+		t.Run("[-5,5]", func(t *testing.T) {
+		})
+		t.Run("[-100,100]", func(t *testing.T) {
+		})
+		t.Run("[-2500,2500]", func(t *testing.T) {
+		})
+		t.Run("[-10000,10000]", func(t *testing.T) {
+		})
+
+	})
+
 	d := Q.Domain{Min: -5, Max: 5, Step: 1}
 	fs := []float64{-1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1}
 	quantized := d.Quantize(fs)
