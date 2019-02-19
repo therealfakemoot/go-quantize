@@ -1,8 +1,6 @@
 package quantize
 
-import (
-	"fmt"
-)
+import ()
 
 // Domain describes the integer space to which float values must be mapped.
 type Domain struct {
@@ -24,7 +22,6 @@ func (d Domain) Steps() []float64 {
 
 // Quantize normalizes a given set of arbitrary inputs into the provided output Domain.
 func (d Domain) Quantize(fs []float64) []float64 {
-	fmt.Println("Entering Quantize().")
 	var ret = make([]float64, len(fs))
 
 	for idx, f := range fs {
