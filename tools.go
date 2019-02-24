@@ -1,7 +1,7 @@
 package quantize
 
 import (
-	noise "github.com/therealfakemoot/genesis/noise"
+	noise "github.com/ojrac/opensimplex-go"
 )
 
 // Min returns the smallest member of an array of floats.
@@ -34,7 +34,7 @@ func Max(fs []float64) float64 {
 func Noise(x, y float64, seed int64) []float64 {
 	var fs []float64
 
-	n := noise.NewWithSeed(seed)
+	n := noise.New(seed)
 
 	for x := 0.0; x < 5.0; x++ {
 		for y := 0.0; y < 5.0; y++ {
