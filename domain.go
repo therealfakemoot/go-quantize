@@ -4,20 +4,8 @@ import ()
 
 // Domain describes the integer space to which float values must be mapped.
 type Domain struct {
-	Min  float64
-	Max  float64
-	Step float64
-}
-
-// Steps builds an array containing all steps in the desired output domain.
-func (d Domain) Steps() []float64 {
-	var steps []float64
-
-	for i := d.Min; i <= d.Max; i += d.Step {
-		steps = append(steps, i)
-	}
-
-	return steps
+	Min float64
+	Max float64
 }
 
 func (d Domain) QuantizePoint(f float64) float64 {

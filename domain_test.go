@@ -19,7 +19,7 @@ func buildTestDomains(edge float64) []Q.Domain {
 	var ret []Q.Domain
 
 	for x := edge; x < 0.0; x++ {
-		ret = append(ret, Q.Domain{Min: x, Max: -x, Step: 1})
+		ret = append(ret, Q.Domain{Min: x, Max: -x})
 	}
 	return ret
 }
@@ -67,7 +67,7 @@ func TestDomainBounds(t *testing.T) {
 func TestKnownValues(t *testing.T) {
 	t.Run("Balanced Domains", func(t *testing.T) {
 		t.Run("[-5,5]", func(t *testing.T) {
-			d := Q.Domain{Min: -5, Max: 5, Step: 1}
+			d := Q.Domain{Min: -5, Max: 5}
 			fs := []float64{-1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1}
 			quantized := d.Quantize(fs)
 			expected := []float64{-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5}
@@ -77,7 +77,7 @@ func TestKnownValues(t *testing.T) {
 			}
 		})
 		t.Run("[-100,100]", func(t *testing.T) {
-			d := Q.Domain{Min: -100, Max: 100, Step: 1}
+			d := Q.Domain{Min: -100, Max: 100}
 			fs := []float64{-1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1}
 			quantized := d.Quantize(fs)
 			expected := []float64{-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100}
@@ -88,7 +88,7 @@ func TestKnownValues(t *testing.T) {
 		})
 		t.Run("[-2500,2500]", func(t *testing.T) {
 			t.Skip()
-			d := Q.Domain{Min: -2500, Max: 2500, Step: 1}
+			d := Q.Domain{Min: -2500, Max: 2500}
 			fs := []float64{-1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1}
 			quantized := d.Quantize(fs)
 			expected := []float64{-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100}
@@ -100,26 +100,12 @@ func TestKnownValues(t *testing.T) {
 
 	})
 
-	d := Q.Domain{Min: -5, Max: 5, Step: 1}
+	d := Q.Domain{Min: -5, Max: 5}
 	fs := []float64{-1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1}
 	quantized := d.Quantize(fs)
 	expected := []float64{-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5}
 
 	if !reflect.DeepEqual(quantized, expected) {
 		t.Errorf("Expected: %v, got %v", expected, quantized)
-	}
-}
-
-func TestDomainSteps(t *testing.T) {
-	d := Q.Domain{
-		Min:  -5,
-		Max:  5,
-		Step: 1,
-	}
-
-	steps := d.Steps()
-
-	if len(steps) != 11 {
-		t.Errorf("Expected 11 steps, got: %d", len(steps))
 	}
 }
