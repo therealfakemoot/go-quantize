@@ -8,17 +8,17 @@ type Domain struct {
 	Max float64
 }
 
-func (d Domain) QuantizePoint(f float64) float64 {
-	return (f-(-1))*(d.Max-d.Min)/(1-(-1)) + d.Min
+func Quantize(f float64, input, output Domain) float64 {
+	return (f-(input.Min))*(output.Max-output.Min)/(input.Max-input.Min) + output.Min
 
 }
 
 // Quantize normalizes a given set of arbitrary inputs into the provided output Domain.
-func (d Domain) Quantize(fs []float64) []float64 {
+func QuantizeAll(fs []float64, input, output Domain) []float64 {
 	var ret = make([]float64, len(fs))
 
 	for idx, f := range fs {
-		ret[idx] = d.QuantizePoint(f)
+		ret[idx] = Quantize(f, input, output)
 	}
 	return ret
 }
