@@ -4,8 +4,8 @@ import ()
 
 // Domain describes the integer space to which float values must be mapped.
 type Domain struct {
-	Min float64
-	Max float64
+	Min float64 `json:"min"`
+	Max float64 `json:"max"`
 }
 
 func Quantize(f float64, input, output Domain) float64 {
