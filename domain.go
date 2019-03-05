@@ -1,11 +1,17 @@
 package quantize
 
-import ()
+import (
+	"fmt"
+)
 
 // Domain describes the integer space to which float values must be mapped.
 type Domain struct {
 	Min float64 `json:"min"`
 	Max float64 `json:"max"`
+}
+
+func (d Domain) String() string {
+	return fmt.Sprintf("%#v", d)
 }
 
 func Quantize(f float64, input, output Domain) float64 {
